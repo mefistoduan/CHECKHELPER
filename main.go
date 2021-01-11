@@ -3,9 +3,11 @@ package main
 import (
 	"fmt"
 	_ "fmt"
+	"github.com/go-vgo/robotgo"
 	_ "github.com/go-vgo/robotgo"
 	"os"
 	"strings"
+	"time"
 )
 
 func main() {
@@ -19,27 +21,25 @@ func main() {
 	print(" \\______/ \\__|  \\__|\\________| \\______/ \\__|  \\__|\\__|  \\__|\\________|\\________|\\__|      \\________|\\__|  \\__|\n")
 	println("自动处理考勤文件系统(CHECKHELPER) V1.0 2021-1-9")
 	println("auther:Mefisto 838560574@qq.com")
-	println("点击数字后开始转换，1是保留前1个月，依此类推")
+	println("点击数字后1开始转换，1是保留前1个月")
 
-	//one := robotgo.AddEvents("1")
-	//if one {
-	//	fmt.Println("转换已开始...")
-	filetext := GetKeyWordsList()
-	//	//遍历并删除指定内容
-	forAndDel(filetext, 1)
-	//}
+	one := robotgo.AddEvents("1")
+
+	if one {
+		filetext := GetKeyWordsList()
+		forAndDel(filetext, 1)
+	}
 }
 
 //遍历并删除指定内容
 func forAndDel(text string, month int) {
 	//目标内容
-	goal := "2021-01"
+	goal := getTimeScope(month)
 
 	if strings.ContainsAny(text, goal) {
-		num := strings.Index(text, goal) - len(goal)
+		num := strings.Index(text, goal) - len(goal) - 1
 		content := text[num : len(text)-1]
-		println(content)
-		//createFile(content)
+		createFile(content)
 	} else {
 		println("没有找到目标内容")
 	}
@@ -47,6 +47,7 @@ func forAndDel(text string, month int) {
 
 //获取关键字数组
 func GetKeyWordsList() string {
+	fmt.Println("转换已开始...")
 	f, err := os.OpenFile("1_attlog.dat", os.O_RDWR|os.O_APPEND, 0666)
 	if err != nil {
 		fmt.Println("文件打开失败: ", err)
@@ -66,7 +67,7 @@ func GetKeyWordsList() string {
 
 //生成内容
 func createFile(text string) {
-	fileName := "1_attlog.txt"
+	fileName := "2_attlog.dat"
 	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY, 0644)
 	defer f.Close()
 	if err != nil {
@@ -75,4 +76,12 @@ func createFile(text string) {
 		fmt.Println("文件已转换成功,名字是" + fileName)
 		_, _ = f.Write([]byte(text))
 	}
+}
+
+//计算时间
+func getTimeScope(beforeMonth int) string {
+	timeObj := time.Now()
+	beforeTime := timeObj.AddDate(0, -beforeMonth, 0)
+	res := (beforeTime.Format("2006-01"))
+	return string(res)
 }
