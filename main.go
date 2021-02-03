@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	_ "fmt"
-	"github.com/go-vgo/robotgo"
 	_ "github.com/go-vgo/robotgo"
 	"os"
 	"strings"
@@ -21,14 +20,14 @@ func main() {
 	print(" \\______/ \\__|  \\__|\\________| \\______/ \\__|  \\__|\\__|  \\__|\\________|\\________|\\__|      \\________|\\__|  \\__|\n")
 	println("自动处理考勤文件系统(CHECKHELPER) V1.0 2021-1-9")
 	println("auther:Mefisto 838560574@qq.com")
-	println("点击数字后1开始转换，1是保留前1个月")
+	//println("点击数字后1开始转换，1是保留前1个月")
 
-	one := robotgo.AddEvents("1")
-
-	if one {
-		filetext := GetKeyWordsList()
-		forAndDel(filetext, 1)
-	}
+	//one := robotgo.AddEvents("1")
+	//
+	//if one {
+	filetext := GetKeyWordsList()
+	forAndDel(filetext, 1)
+	//}
 }
 
 //遍历并删除指定内容
@@ -58,7 +57,7 @@ func GetKeyWordsList() string {
 	  切片在使用前要申请内存空间,如果不知道文件的大小，尽量多给点空间最好是4K的倍数
 	  如果在读取大文件的情况下，我们应该循环读取，当然，我的笔记里有读取大文件的实战案例。
 	*/
-	temp := make([]byte, 1024*2000)
+	temp := make([]byte, 1024*12000)
 
 	_, _ = f.Read(temp)
 
